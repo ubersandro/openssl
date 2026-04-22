@@ -65,10 +65,7 @@ int asn1_item_embed_new(ASN1_VALUE **pval, const ASN1_ITEM *it, int embed,
     ASN1_aux_cb *asn1_cb;
     ASN1_VALUE **pseqval;
     int i;
-    if (aux && aux->asn1_cb)
-        asn1_cb = aux->asn1_cb;
-    else
-        asn1_cb = 0;
+    
 
     switch (it->itype) {
 
@@ -99,6 +96,10 @@ int asn1_item_embed_new(ASN1_VALUE **pval, const ASN1_ITEM *it, int embed,
         break;
 
     case ASN1_ITYPE_CHOICE:
+        if (aux && aux->asn1_cb)
+            asn1_cb = aux->asn1_cb;
+        else
+            asn1_cb = 0;
         if (asn1_cb) {
             i = asn1_cb(ASN1_OP_NEW_PRE, pval, it, NULL);
             if (!i)
@@ -121,6 +122,10 @@ int asn1_item_embed_new(ASN1_VALUE **pval, const ASN1_ITEM *it, int embed,
 
     case ASN1_ITYPE_NDEF_SEQUENCE:
     case ASN1_ITYPE_SEQUENCE:
+        if (aux && aux->asn1_cb)
+            asn1_cb = aux->asn1_cb;
+        else
+            asn1_cb = 0;
         if (asn1_cb) {
             i = asn1_cb(ASN1_OP_NEW_PRE, pval, it, NULL);
             if (!i)

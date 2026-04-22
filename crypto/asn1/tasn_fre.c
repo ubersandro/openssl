@@ -37,10 +37,6 @@ void ossl_asn1_item_embed_free(ASN1_VALUE **pval, const ASN1_ITEM *it, int embed
         return;
     if ((it->itype != ASN1_ITYPE_PRIMITIVE) && *pval == NULL)
         return;
-    if (aux && aux->asn1_cb)
-        asn1_cb = aux->asn1_cb;
-    else
-        asn1_cb = 0;
 
     switch (it->itype) {
 
@@ -56,6 +52,11 @@ void ossl_asn1_item_embed_free(ASN1_VALUE **pval, const ASN1_ITEM *it, int embed
         break;
 
     case ASN1_ITYPE_CHOICE:
+        if (aux && aux->asn1_cb)
+            asn1_cb = aux->asn1_cb;
+        else
+            asn1_cb = 0;
+
         if (asn1_cb) {
             i = asn1_cb(ASN1_OP_FREE_PRE, pval, it, NULL);
             if (i == 2)
@@ -91,6 +92,11 @@ void ossl_asn1_item_embed_free(ASN1_VALUE **pval, const ASN1_ITEM *it, int embed
             *pval = NULL;
             return;
         }
+        if (aux && aux->asn1_cb)
+            asn1_cb = aux->asn1_cb;
+        else
+            asn1_cb = 0;
+
         if (asn1_cb) {
             i = asn1_cb(ASN1_OP_FREE_PRE, pval, it, NULL);
             if (i == 2)

@@ -213,10 +213,7 @@ int asn1_item_embed_d2i(ASN1_VALUE **pval, const unsigned char **in,
         return 0;
     }
     aux = it->funcs;
-    if (aux && aux->asn1_cb)
-        asn1_cb = aux->asn1_cb;
-    else
-        asn1_cb = 0;
+    
 
     if (++depth > ASN1_MAX_CONSTRUCTED_NEST) {
         ERR_raise(ERR_LIB_ASN1, ASN1_R_NESTED_TOO_DEEP);
@@ -298,7 +295,10 @@ int asn1_item_embed_d2i(ASN1_VALUE **pval, const unsigned char **in,
             ERR_raise(ERR_LIB_ASN1, ASN1_R_BAD_TEMPLATE);
             goto err;
         }
-
+        if (aux && aux->asn1_cb)
+            asn1_cb = aux->asn1_cb;
+        else
+            asn1_cb = 0;
         if (asn1_cb && !asn1_cb(ASN1_OP_D2I_PRE, pval, it, NULL))
             goto auxerr;
         if (*pval) {
@@ -393,7 +393,10 @@ int asn1_item_embed_d2i(ASN1_VALUE **pval, const unsigned char **in,
             ERR_raise(ERR_LIB_ASN1, ERR_R_NESTED_ASN1_ERROR);
             goto err;
         }
-
+        if (aux && aux->asn1_cb)
+            asn1_cb = aux->asn1_cb;
+        else
+            asn1_cb = 0;
         if (asn1_cb && !asn1_cb(ASN1_OP_D2I_PRE, pval, it, NULL))
             goto auxerr;
 

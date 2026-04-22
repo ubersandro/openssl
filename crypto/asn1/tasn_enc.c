@@ -90,10 +90,7 @@ int ASN1_item_ex_i2d(const ASN1_VALUE **pval, unsigned char **out,
     if ((it->itype != ASN1_ITYPE_PRIMITIVE) && *pval == NULL)
         return 0;
 
-    if (aux != NULL) {
-        asn1_cb = ((aux->flags & ASN1_AFLG_CONST_CB) != 0) ? aux->asn1_const_cb
-                                                           : (ASN1_aux_const_cb *)aux->asn1_cb; /* backward compatibility */
-    }
+    
 
     switch (it->itype) {
 
@@ -122,6 +119,10 @@ int ASN1_item_ex_i2d(const ASN1_VALUE **pval, unsigned char **out,
         if (tag != -1) {
             ERR_raise(ERR_LIB_ASN1, ASN1_R_BAD_TEMPLATE);
             return -1;
+        }
+        if (aux != NULL) {
+            asn1_cb = ((aux->flags & ASN1_AFLG_CONST_CB) != 0) ? aux->asn1_const_cb
+                                                               : (ASN1_aux_const_cb *)aux->asn1_cb; /* backward compatibility */
         }
         if (asn1_cb && !asn1_cb(ASN1_OP_I2D_PRE, pval, it, NULL))
             return 0;
@@ -165,6 +166,10 @@ int ASN1_item_ex_i2d(const ASN1_VALUE **pval, unsigned char **out,
             /* Retain any other flags in aclass */
             aclass = (aclass & ~ASN1_TFLG_TAG_CLASS)
                 | V_ASN1_UNIVERSAL;
+        }
+        if (aux != NULL) {
+            asn1_cb = ((aux->flags & ASN1_AFLG_CONST_CB) != 0) ? aux->asn1_const_cb
+                                                               : (ASN1_aux_const_cb *)aux->asn1_cb; /* backward compatibility */
         }
         if (asn1_cb && !asn1_cb(ASN1_OP_I2D_PRE, pval, it, NULL))
             return 0;
